@@ -44,6 +44,21 @@ bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads
 bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) uninstall
 ```
 
+### ➕ Tambah Akun
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) add
+```
+
+### ➖ Hapus Akun
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) del
+```
+
+### 📋 List Akun
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) list
+```
+
 ## 🔁 Backup & Restore
 ### 📦 Lokasi Backup
 File backup konfigurasi ZIVPN UDP disimpan di lokasi berikut:
