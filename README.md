@@ -2,7 +2,7 @@
 
 **Script Install ZIVPN UDP**
 
-Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfigurasi ZIVPN UDP** melalui command line.
+Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfigurasi ZIVPN UDP**
 
 ---
 
@@ -15,27 +15,27 @@ Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfi
 ---
 
 ## 📥 Download Script
-
 ```bash
 wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh
 chmod +x zivpn.sh
+```
 
-```md
-### ▶️ Install ZIVPN UDP (One Command)
+### ▶️ Install ZIVPN UDP
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) install
+```
 
-```md
-### ▶️ Backup Config ZIVPN UDP (One Command)
+### ▶️ Backup Config ZIVPN UDP
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) backup
+```
 
-```md
-### ▶️ Restore Config ZIVPN UDP (One Command)
+### ▶️ Restore Config ZIVPN UDP
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) restore
+```
 
-```md
-### ▶️ Uninstall ZIVPN UDP (One Command)
+### ▶️ Uninstall ZIVPN UDP
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) uninstall
+```
