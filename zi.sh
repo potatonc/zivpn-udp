@@ -12,6 +12,28 @@ Dir="/etc/zivpn"
 FileBackup="/root/config.json.zivpn"
 MACHINE=
 
+MsgNotInstalled() {
+  echo
+  echo -e "➜ ZIVPN UDP Tidak Terpasang"
+  echo
+}
+
+MsgUninstall() {
+  echo
+  echo -e "➜ ZIVPN UDP Berhasil dibersihkan"
+  echo
+}
+
+MsgFileBackup() {
+  echo
+  echo -e "➜ File Backup: $FileBackup"
+  echo
+}
+
+RestartZivpn() {
+  systemctl -q restart zivpn
+}
+
 Machine() {
   if [[ "$(uname)" == 'Linux' ]]; then
     case "$(uname -m)" in
@@ -117,6 +139,9 @@ RoutingTables() {
 DownloadAndChmod() {
   wget "https://github.com/zahidbd2/udp-zivpn/releases/download/udp-zivpn_1.4.9/udp-zivpn-linux-$MACHINE" -O /usr/local/bin/zivpn 1> /dev/null 2> /dev/null
   chmod +x /usr/local/bin/zivpn
+  
+  wget "https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.py" -O /usr/local/bin/mzivpn 1> /dev/null 2> /dev/null
+  chmod +x /usr/local/bin/mzivpn
 }
 
 Deps() {
@@ -133,6 +158,10 @@ Deps() {
   if Utils cmd zivpn; then
     rm -f $(command -v zivpn)
   fi
+  
+  if Utils cmd mzivpn; then
+    rm -f $(command -v mzivpn)
+  fi
 }
 
 ReplaceConfig() {
@@ -141,10 +170,9 @@ ReplaceConfig() {
   
   case "$ask" in
   [yY])
-    mv "$Dir/config.json" $FileBackup
-    echo
-    echo -e "➜ File Backup: $FileBackup"
-    echo
+    rm -f $FileBackup
+    cp "$Dir/config.json" $FileBackup
+    MsgFileBackup
   ;;
   [nN])
     return
@@ -158,17 +186,15 @@ ReplaceConfig() {
 
 BackupConfig() {
   echo
-  read -rp "➜ Backup konfigurasi lama? [y/n]: " ask
+  read -rp "➜ Backup konfigurasi? [y/n]: " ask
   
   case "$ask" in
   [yY])
     if Utils file $FileBackup; then
       ReplaceConfig
     else
-      mv "$Dir/config.json" $FileBackup
-      echo
-      echo -e "➜ File Backup: $FileBackup"
-      echo
+      cp "$Dir/config.json" $FileBackup
+      MsgFileBackup
     fi
   ;;
   [nN])
@@ -184,12 +210,13 @@ BackupConfig() {
 RestoreConfig() {
   echo
   if Utils file $FileBackup; then
-    read -rp "➜ Restore konfigurasi lama? [y/n]: " ask
+    read -rp "➜ Restore konfigurasi? [y/n]: " ask
     
     case "$ask" in
     [yY])
-      mv $FileBackup "$Dir/config.json"
-      systemctl -q restart zivpn
+      rm -f "$Dir/config.json"
+      cp $FileBackup "$Dir/config.json"
+      RestartZivpn
       echo
       echo -e "➜ Berhasil memulihkan konfigurasi"
       echo
@@ -203,6 +230,12 @@ RestoreConfig() {
     esac
   fi
   echo
+}
+
+IsInstalled() {
+  if ! Utils cmd zivpn || ! Utils cmd mzivpn || ! Utils folder $Dir || ! Utils file $FileSys; then
+    return 1
+  fi
 }
 
 Uninstall() {
@@ -219,6 +252,10 @@ Uninstall() {
   if Utils cmd zivpn; then
     killall zivpn 1> /dev/null 2> /dev/null
     rm -f $(command -v zivpn)
+  fi
+  
+  if Utils cmd mzivpn; then
+    rm -f $(command -v mzivpn)
   fi
   
   if Utils folder $Dir; then
@@ -244,19 +281,35 @@ Install() {
     PostKernel
     RoutingTables
     RestoreConfig
-    systemctl -q restart zivpn
+    RestartZivpn
     echo
     echo -e "➜ ZIVPN UDP Terpasang"
     echo
   else
-    echo
-    echo -e "➜ ZIVPN UDP Tidak Terpasang"
-    echo
+    MsgNotInstalled
     Uninstall
-    echo
-    echo -e "➜ ZIVPN UDP Berhasil dibersihkan"
-    echo
+    MsgUninstall
   fi
+}
+
+AddAccount() {
+  echo
+  read -rp "➜ [ADD] Account (password): " Password
+  mzivpn add "$Password"
+  RestartZivpn
+  echo
+  echo -e "➜ Berhasil menambahkan [$Password]"
+  echo
+}
+
+DelAccount() {
+  echo
+  read -rp "➜ [DEL] Account (password): " Password
+  mzivpn del "$Password"
+  RestartZivpn
+  echo
+  echo -e "➜ Berhasil menghapus [$Password]"
+  echo
 }
 
 main() {
@@ -274,9 +327,7 @@ main() {
   'install') Install ;;
   'uninstall')
     Uninstall
-    echo
-    echo -e "➜ ZIVPN UDP Berhasil dibersihkan"
-    echo
+    MsgUninstall
   ;;
   'backup')
     if Utils file "$Dir/config.json"; then
@@ -289,12 +340,10 @@ main() {
   ;;
   'restore')
     if Utils file $FileBackup; then
-      if Utils cmd zivpn && Utils folder $Dir && Utils file $FileSys; then
+      if IsInstalled; then
         RestoreConfig
       else
-        echo
-        echo -e "➜ ZIVPN UDP Tidak Terpasang"
-        echo
+        MsgNotInstalled
       fi
     else
       echo
@@ -302,13 +351,48 @@ main() {
       echo
     fi
   ;;
+  'add')
+    if IsInstalled; then
+      AddAccount
+    else
+      MsgNotInstalled
+    fi
+  ;;
+  'del')
+    if IsInstalled; then
+      DelAccount
+    else
+      MsgNotInstalled
+    fi
+  ;;
+  'list')
+    if IsInstalled; then
+      mzivpn list
+    else
+      MsgNotInstalled
+    fi
+  ;;
   *)
     echo
-    echo -e " Argument:"
-    echo -e "    install   - Memasang ZIVPN UDP"
-    echo -e "    uninstall - Menghapus ZIVPN UDP"
-    echo -e "    backup    - Menyalin konfigurasi ke $FileBackup"
-    echo -e "    restore   - Memulihkan konfigurasi dari $FileBackup"
+    echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "  🚀 ZIVPN UDP - Command Line Tool"
+    echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo
+    echo -e "  📌 Usage:"
+    echo -e "    $0 <command>"
+    echo
+    echo -e "  🧩 Available Commands:"
+    echo -e "    install     ➜ Memasang ZIVPN UDP"
+    echo -e "    uninstall   ➜ Menghapus ZIVPN UDP"
+    echo -e "    backup      ➜ Backup konfigurasi ke:"
+    echo -e "                 $FileBackup"
+    echo -e "    restore     ➜ Restore konfigurasi dari:"
+    echo -e "                 $FileBackup"
+    echo -e "    add         ➜ Menambahkan akun"
+    echo -e "    del         ➜ Menghapus akun"
+    echo -e "    list        ➜ Menampilkan daftar akun"
+    echo
+    echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo
   ;;
   esac
