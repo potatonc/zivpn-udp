@@ -16,28 +16,28 @@ Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfi
 
 ## 📥 Download Script
 ```bash
-wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh
-chmod +x zivpn.sh
+wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh
+chmod +x zi.sh
 ```
 
 ### ▶️ Install ZIVPN UDP
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) install
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) install
 ```
 
 ### 💾 Backup Konfigurasi
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) backup
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) backup
 ```
 
 ### ♻️ Restore Konfigurasi
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) restore
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) restore
 ```
 
 ### ❌ Uninstall ZIVPN UDP
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zivpn.sh) uninstall
+bash <(wget -qO- https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh) uninstall
 ```
 
 ## 🔁 Backup & Restore
