@@ -75,6 +75,7 @@ AppendLine() {
 
 Utils() {
   case "$1" in
+    'rt') iptables -t nat -S PREROUTING | grep -w ":5667" >/dev/null 2>&1 ;;
     'cmd') command -v "$2" >/dev/null 2>&1 ;;
     'file') [ -f "$2" ] ;;
     'folder') [ -d "$2" ] ;;
@@ -132,7 +133,9 @@ PostKernel() {
 }
 
 RoutingTables() {
-  iptables -t nat -D PREROUTING -i $NIC -p udp --dport 6000:19999 -j DNAT --to-destination :5667
+  if Utils rt; then
+    iptables -t nat -D PREROUTING -i $NIC -p udp --dport 6000:19999 -j DNAT --to-destination :5667
+  fi
   iptables -t nat -A PREROUTING -i $NIC -p udp --dport 6000:19999 -j DNAT --to-destination :5667
 }
 
@@ -260,6 +263,10 @@ Uninstall() {
   
   if Utils folder $Dir; then
     rm -rf $Dir
+  fi
+  
+  if Utils rt; then
+    iptables -t nat -D PREROUTING -i $NIC -p udp --dport 6000:19999 -j DNAT --to-destination :5667
   fi
 }
 
