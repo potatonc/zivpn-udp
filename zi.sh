@@ -367,7 +367,9 @@ main() {
   ;;
   'list')
     if IsInstalled; then
+      echo
       mzivpn list
+      echo
     else
       MsgNotInstalled
     fi
