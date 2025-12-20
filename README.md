@@ -11,6 +11,9 @@ Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfi
 - Uninstall ZIVPN UDP
 - Backup konfigurasi
 - Restore konfigurasi dari backup
+- Menambahkan akun
+- Menghapus akun
+- List akun
 
 ---
 
@@ -18,6 +21,7 @@ Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfi
 ```bash
 wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh
 chmod +x zi.sh
+./zi.sh help
 ```
 
 ### ▶️ Install ZIVPN UDP
