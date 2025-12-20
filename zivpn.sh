@@ -260,6 +260,12 @@ Install() {
 }
 
 main() {
+  if [ $EUID -ne 0 ]; then
+    echo
+    echo -e "➜ error: Membutuhkan akses root"
+    echo
+  fi
+  
   if ! Utils folder $Dir; then
     mkdir -p $Dir
   fi
