@@ -19,7 +19,7 @@ Script ini digunakan untuk **memasang, menghapus, membackup, dan merestore konfi
 
 ## 📥 Download Script
 ```bash
-wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh
+wget https://raw.githubusercontent.com/potatonc/zivpn-udp/refs/heads/main/zi.sh -O zi.sh
 chmod +x zi.sh
 ./zi.sh help
 ```
