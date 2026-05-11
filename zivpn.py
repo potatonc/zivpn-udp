@@ -26,7 +26,7 @@ def load_config():
 
 
 def save_config(data):
-    fd, tmp_path = tempfile.mkstemp()
+    fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(CONF))
     try:
         with os.fdopen(fd, "w") as f:
             json.dump(data, f, indent=2)
